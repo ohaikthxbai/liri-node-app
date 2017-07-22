@@ -68,15 +68,15 @@ var twitterInfo = function() {
 // spotify function
 var spotifyInfo = function() {
     var sClient = new spotify(keys.spotifyKeys);
-    // check if the input is more than 4 characters and if its a string
-    if(process.argv.length >= 4 || typeof selection === 'string') {
+    // check if the input isn't empty and if it's a string
+    if(!selection === undefined || typeof selection === 'string') {
         // call spotify search method with user's input (selection)
         sClient.search({
             type: 'track',
             query: selection
         }, function(error, data) {
             if (error) {
-                console.log("Spotify error. FIX IT.")
+                console.log("Spotify error. FIX IT:" + error);
             }
             else {
                 spotifyOutput(data);
@@ -84,13 +84,13 @@ var spotifyInfo = function() {
         });
     }
     // check if the user's input is less than 4 characters, or no input
-    else if (process.argv.length < 4) {
+    else {
         sClient.search({
             type: 'track',
             query: "The Sign Ace of Base"
         }, function(error, data) {
             if (error) {
-                console.log("Spotify error. FIX IT.")
+                console.log("Spotify error. FIX IT:" + error);
             }
             else {
                 spotifyOutput(data);
@@ -126,65 +126,43 @@ var spotifyOutput = function(data) {
 // USING REQUEST AND THE OMDBAPI URL WITH REQUEST KEY INSTEAD
 
 var movieInfo = function(data) {
-    // didn't work :(
-    // var omdbParams = {
-    //     query: selection
-    // }
-    if(process.argv.length >= 4 || typeof selection === 'string') {
-        // omdb.search(omdbParams, function(error, data) {
-        //     if (error) {
-        //         console.log("OMDB ERROR, PLEASE FIX");
-        //     }
-        //     else {
-        //         console.log(data);
-        //     }
-        // });
-        if (process.argv.length >= 4 || typeof selection === 'string') {
-            request('http://www.omdbapi.com/?apikey=40e9cece&t=' + selection + '&tomatoes=true', function(error, response, body) {
-                if (error) {
-                    console.log("OMDB ERROR, PLEASE FIX.");
-                } 
-                else {
-                    omdbData = JSON.parse(body);
-                    // Testing object and properties
-                    //console.log(omdbData['Title']);
-                    movieOutput(omdbData);
-                }
-            });
-        }
+    // omdb npm didn't work :(
+    if(!selection === undefined || typeof selection === 'string') {
+        request('http://www.omdbapi.com/?apikey=40e9cece&t=' + selection + '&tomatoes=true', function(error, response, body) {
+            if (error) {
+                console.log("OMDB ERROR, PLEASE FIX:" + error);
+            } 
+            else {
+                omdbData = JSON.parse(body);
+                // Testing object and properties
+                //console.log(omdbData['Title']);
+                movieOutput(omdbData);
+            }
+        });
     }
-    else if (process.argv.length < 4) {
-        // selection = "Mr. Nobody";
-        // omdb.search(omdbParams, function(error, data) {
-        //     if (error) {
-        //         console.log("OMDB ERROR, PLEASE FIX");
-        //     }  
-        //     else {
-        //         console.log(data);
-        //     }
-        // });
-            selection = 'Mr. Nobody';
-            request('http://www.omdbapi.com/?apikey=40e9cece&t=' + selection + '&tomatoes=true', function(error, response, body) {
-                if (error) {
-                    console.log("OMDB ERROR, PLEASE FIX.");
-                } 
-                else {
-                    omdbData = JSON.parse(body);
-                    // Testing
-                    //console.log(omdbData['Actors']);
-                    movieOutput(omdbData);
-                }
-            });
+    else {
+        selection = 'Mr. Nobody';
+        request('http://www.omdbapi.com/?apikey=40e9cece&t=' + selection + '&tomatoes=true', function(error, response, body) {
+            if (error) {
+                console.log("OMDB ERROR, PLEASE FIX: " + error);
+            } 
+            else {
+                omdbData = JSON.parse(body);
+                // Testing
+                //console.log(omdbData['Actors']);
+                movieOutput(omdbData);
+            }
+        });
     }
 }
 // test function
-movieInfo();
+//movieInfo();
 // creating a new function to separate the code. This will display all the data from the API.
 var movieOutput = function() {
     // assign variabels to movie details
     mTitle = omdbData['Title'];
     mYear = omdbData['Year'];
-    imdbRating =  omdbData['imdbRating'];
+    imdbRating =  omdbData['imdbRating'] + "/10";
     rTomaRating = omdbData['tomatoRating'];
     mLang =  omdbData['Language'];
     mPLot = omdbData['Plot'];
@@ -198,3 +176,4 @@ var movieOutput = function() {
     console.log("Lanuage: " + mLang);
     console.log("Cast: " + mCast);
 }
+
