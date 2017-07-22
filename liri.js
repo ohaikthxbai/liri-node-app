@@ -150,8 +150,12 @@ var movieInfo = function(data) {
             } 
             else {
                 omdbData = JSON.parse(body);
+                console.log("If you haven't watched " + selection + ", then you should!: http://www.imdb.com/title/tt0485947/");
+                console.log("You can watch it on Netflix!");
+                console.log("");
                 // Testing
                 //console.log(omdbData['Actors']);
+                console.log("Here's some information on the movie: ");
                 movieOutput(omdbData);
             }
         });
@@ -172,7 +176,7 @@ var movieOutput = function() {
     // display them to console
     console.log("Film Title: " + mTitle);
     console.log("Year: " + mYear);
-    console.log("Film Plot: " + mPLot);
+    console.log("Synopsis: " + mPLot);
     console.log("IMDB Rating: " + imdbRating);
     console.log("Rotten Tomatoes Rating: " + rTomaRating);
     console.log("Lanuage: " + mLang);
