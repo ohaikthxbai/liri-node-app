@@ -22,7 +22,8 @@ var twitterInfo = function() {
             console.log("Twitter error. FIX IT.");
         } 
         else {
-            // display 20 tweets, using 22 because if not, it'll only show 8
+            // display 20 tweets, using 22 because if not, it'll only show 18
+            // fix later
             for(var i = 1; i <= 22; i++) {
                 // for cleanliness :)
                 console.log('');
