@@ -3,6 +3,7 @@ var twitter = require("twitter");
 var request = require("request");
 var spotify = require("node-spotify-api");
 var keys = require("./keys");
+var fs = require("fs");
 // installed and tried the omdb npm, but couldn't get it to work.
 //var omdb = require('omdb-client');
 // omdb and movie variables
@@ -22,7 +23,7 @@ var command = process.argv[2];
 /*  my-tweets
     spotify-this-song
     movie-this
-    do-what-it-says BONUS
+    do-what-it-says BONUS.... not actually bonus
 */
 // user's input
 var selection = process.argv[3];
@@ -188,6 +189,32 @@ var movieOutput = function() {
     console.log("Cast: " + mCast);
     console.log("");
 }
+/* - - - - - - - - - - - JUST DO IT - - - - - - - - - - */
+var justDoIt = function() {
+    fs.readFile('random.txt', 'utf8', function(error, data) {
+        if (error) {
+            console.log("Error! Can't DO IT: " + error)
+        } 
+        var rndmData = data.split(',');
+        command = rndmData[0];
+        selection = rndmData[1];
+        //console.log(data);
+
+        switch(command) {
+            case 'my-tweets':
+            twitterInfo();
+            break;
+            case 'spotify-this-song':
+            spotifyInfo();
+            break;
+            case 'movie-this':
+            movieInfo();
+        }
+
+    });
+}
+// testing
+//justDoIt();
 
 /* - - - - - - - - - - COMMAND FUNCTION - - - - - - - - - - - */
 // must be added at the end of the script.
@@ -201,6 +228,9 @@ switch(command) {
         break;
     case 'movie-this':
         movieInfo();
+        break;
+    case 'do-what-it-says':
+        justDoIt();
         break;
     default:
         console.log("DOES NOT COMPUTE, TRY AGAIN");
