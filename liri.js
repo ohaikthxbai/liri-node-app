@@ -5,8 +5,17 @@ var spotify = require("node-spotify-api");
 var keys = require("./keys");
 
 // calling user input variables:
-var input = process.argv[2];
+// user command
+var command = process.argv[2];
+/*  my-tweets
+    spotify-this-song
+    movie-this
+    do-what-it-says 
+*/
+// user's input
 var selection = process.argv[3];
+
+/* - - - - - - - - - - TWITTER SECTION - - - - - - - - - */
 
 // twitter function: print out those tweeeets!
 var twitterInfo = function() {
@@ -22,6 +31,10 @@ var twitterInfo = function() {
             console.log("Twitter error. FIX IT.");
         } 
         else {
+            // TWEET TEST
+            console.log(tweets[0]);
+            // contains a ton of information within the object of each tweet
+            // look for the 'text' property
             // display 20 tweets, using 22 because if not, it'll only show 18
             // fix later
             for(var i = 1; i <= 22; i++) {
@@ -36,18 +49,31 @@ var twitterInfo = function() {
     });
 }
 // test function
-twitterInfo();
+//twitterInfo();
 
-
+/* - - - - - - - - - - SPOTIFY SECTION - - - - - - - - - */
 
 // spotify function
 var spotifyInfo = function() {
     var sClient = new spotify(keys.spotifyKeys);
 
-    if(process.argv.length <= 4 || typeof selection === 'string') {
+    if(process.argv.length >= 4 || typeof selection === 'string') {
         sClient.search({
             type: 'track',
-            query: "Spire Reverie"
+            query: selection
+        }, function(error, data) {
+            if (error) {
+                console.log("Spotify error. FIX IT.")
+            }
+            else {
+                spotifyOutput(data);
+            }
+        });
+    }
+    else if (process.argv.length < 4) {
+        sClient.search({
+            type: 'track',
+            query: "The Sign Ace of Base"
         }, function(error, data) {
             if (error) {
                 console.log("Spotify error. FIX IT.")
@@ -63,7 +89,7 @@ var spotifyInfo = function() {
 spotifyInfo();
 
 var spotifyOutput = function(data) {
-    // data from spotify api
+    // SPOTIFY API
     // data['tracks'] are the results from the search
     // data['tracks']['items'] accesses the items property with a value of an array of objects: [object Object],[object Object]
     // ..[0/1] is first or second object in items
@@ -81,3 +107,4 @@ var spotifyOutput = function(data) {
     //console.log(JSON.stringify((data['tracks']['items'][1])));
 }
 
+/* - - - - - - - - - - OMDB SECTION - - - - - - - - - */
