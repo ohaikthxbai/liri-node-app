@@ -3,6 +3,9 @@ var twitter = require("twitter");
 var request = require("request");
 var spotify = require("node-spotify-api");
 var keys = require("./keys");
+// installed and tried the omdb npm, but couldn't get it to work.
+//var omdb = require('omdb-client');
+var omdbData;
 
 // calling user input variables:
 // user command
@@ -56,8 +59,9 @@ var twitterInfo = function() {
 // spotify function
 var spotifyInfo = function() {
     var sClient = new spotify(keys.spotifyKeys);
-
+    // check if the input is more than 4 characters and if its a string
     if(process.argv.length >= 4 || typeof selection === 'string') {
+        // call spotify search method with user's input (selection)
         sClient.search({
             type: 'track',
             query: selection
@@ -70,6 +74,7 @@ var spotifyInfo = function() {
             }
         });
     }
+    // check if the user's input is less than 4 characters, or no input
     else if (process.argv.length < 4) {
         sClient.search({
             type: 'track',
@@ -86,7 +91,7 @@ var spotifyInfo = function() {
 }
 
 // test function
-spotifyInfo();
+//spotifyInfo();
 
 var spotifyOutput = function(data) {
     // SPOTIFY API
@@ -108,3 +113,56 @@ var spotifyOutput = function(data) {
 }
 
 /* - - - - - - - - - - OMDB SECTION - - - - - - - - - */
+// TRIED THE OMDB-CLIENT NPM INSTALL, BUT STRUGGLED TO GET IT TO WORK
+// USING REQUEST AND THE OMDBAPI URL WITH REQUEST KEY INSTEAD
+
+var movieOutput = function(data) {
+    // var omdbParams = {
+    //     query: selection
+    // }
+    if(process.argv.length >= 4 || typeof selection === 'string') {
+        // omdb.search(omdbParams, function(error, data) {
+        //     if (error) {
+        //         console.log("OMDB ERROR, PLEASE FIX");
+        //     }
+        //     else {
+        //         console.log(data);
+        //     }
+        // });
+        if (process.argv.length >= 4 || typeof selection === 'string') {
+            request('http://www.omdbapi.com/?apikey=40e9cece&t=' + selection + '&tomatoes=true', function(error, response, body) {
+                if (error) {
+                    console.log("OMDB ERROR, PLEASE FIX.");
+                } 
+                else {
+                    omdbData = JSON.parse(body);
+                    // Testing object and properties
+                    //console.log(omdbData['Title']);
+                }
+            });
+        }
+    }
+    else if (process.argv.length < 4) {
+        // selection = "Mr. Nobody";
+        // omdb.search(omdbParams, function(error, data) {
+        //     if (error) {
+        //         console.log("OMDB ERROR, PLEASE FIX");
+        //     }  
+        //     else {
+        //         console.log(data);
+        //     }
+        // });
+            selection = 'Mr. Nobody';
+            request('http://www.omdbapi.com/?apikey=40e9cece&t=' + selection + '&tomatoes=true', function(error, response, body) {
+                if (error) {
+                    console.log("OMDB ERROR, PLEASE FIX.");
+                } 
+                else {
+                    omdbData = JSON.parse(body);
+                    // Testing
+                    //console.log(omdbData['Actors']);
+                }
+            });
+    }
+}
+movieOutput();
