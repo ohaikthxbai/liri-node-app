@@ -1,11 +1,20 @@
-// declare npm packages (dependencies)
+// declare npm packages (dependencies) and global variables
 var twitter = require("twitter");
 var request = require("request");
 var spotify = require("node-spotify-api");
 var keys = require("./keys");
 // installed and tried the omdb npm, but couldn't get it to work.
 //var omdb = require('omdb-client');
+// omdb and movie variables
 var omdbData;
+// movie information
+var mTitle, 
+    mYear, 
+    imdbRating, 
+    rTomaRating,
+    mLang, 
+    mPLot, 
+    mCast
 
 // calling user input variables:
 // user command
@@ -116,7 +125,8 @@ var spotifyOutput = function(data) {
 // TRIED THE OMDB-CLIENT NPM INSTALL, BUT STRUGGLED TO GET IT TO WORK
 // USING REQUEST AND THE OMDBAPI URL WITH REQUEST KEY INSTEAD
 
-var movieOutput = function(data) {
+var movieInfo = function(data) {
+    // didn't work :(
     // var omdbParams = {
     //     query: selection
     // }
@@ -138,6 +148,7 @@ var movieOutput = function(data) {
                     omdbData = JSON.parse(body);
                     // Testing object and properties
                     //console.log(omdbData['Title']);
+                    movieOutput(omdbData);
                 }
             });
         }
@@ -161,8 +172,29 @@ var movieOutput = function(data) {
                     omdbData = JSON.parse(body);
                     // Testing
                     //console.log(omdbData['Actors']);
+                    movieOutput(omdbData);
                 }
             });
     }
 }
-movieOutput();
+// test function
+movieInfo();
+// creating a new function to separate the code. This will display all the data from the API.
+var movieOutput = function() {
+    // assign variabels to movie details
+    mTitle = omdbData['Title'];
+    mYear = omdbData['Year'];
+    imdbRating =  omdbData['imdbRating'];
+    rTomaRating = omdbData['tomatoRating'];
+    mLang =  omdbData['Language'];
+    mPLot = omdbData['Plot'];
+    mCast = omdbData['Actors'];
+    // display them to console
+    console.log("Film Title: " + mTitle);
+    console.log("Year: " + mYear);
+    console.log("Film Plot: " + mPLot);
+    console.log("IMDB Rating: " + imdbRating);
+    console.log("Rotten Tomatoes Rating: " + rTomaRating);
+    console.log("Lanuage: " + mLang);
+    console.log("Cast: " + mCast);
+}
