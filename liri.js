@@ -22,7 +22,7 @@ var command = process.argv[2];
 /*  my-tweets
     spotify-this-song
     movie-this
-    do-what-it-says 
+    do-what-it-says BONUS
 */
 // user's input
 var selection = process.argv[3];
@@ -86,6 +86,7 @@ var spotifyInfo = function() {
     }
     // if the input is empty, default search is this
     else {
+        console.log("No user input; a search has been made for you: ");
         selection = "The Sign Ace of Base";
         sClient.search({
             type: 'track',
@@ -115,10 +116,12 @@ var spotifyOutput = function(data) {
     var album = data['tracks']['items'][1]['album']['name'];
     var track = data['tracks']['items'][1]['name'];
     var preview = data['tracks']['items'][1]['external_urls']['spotify'];
+    console.log("");
     console.log("Artist: " + artists);
     console.log("Album: " + album);
     console.log("Track Name: " +track);
     console.log("Song Preview: " + preview);
+    console.log("");
     // TESTING
     //console.log(JSON.stringify((data['tracks']['items'][1])));
 }
@@ -138,6 +141,7 @@ var movieInfo = function(data) {
                 omdbData = JSON.parse(body);
                 // Testing object and properties
                 //console.log(omdbData['Title']);
+                console.log("Movie Information: ");
                 movieOutput(omdbData);
             }
         });
@@ -155,7 +159,7 @@ var movieInfo = function(data) {
                 console.log("");
                 // Testing
                 //console.log(omdbData['Actors']);
-                console.log("Here's some information on the movie: ");
+                console.log("Here's some information on the film: ");
                 movieOutput(omdbData);
             }
         });
@@ -174,12 +178,30 @@ var movieOutput = function() {
     mPLot = omdbData['Plot'];
     mCast = omdbData['Actors'];
     // display them to console
-    console.log("Film Title: " + mTitle);
+    console.log("");
+    console.log("Title: " + mTitle);
     console.log("Year: " + mYear);
     console.log("Synopsis: " + mPLot);
     console.log("IMDB Rating: " + imdbRating);
     console.log("Rotten Tomatoes Rating: " + rTomaRating);
     console.log("Lanuage: " + mLang);
     console.log("Cast: " + mCast);
+    console.log("");
 }
 
+/* - - - - - - - - - - COMMAND FUNCTION - - - - - - - - - - - */
+// must be added at the end of the script.
+// if added before all the code, nothing works.
+switch(command) {
+    case 'my-tweets':
+        twitterInfo();
+        break;
+    case 'spotify-this-song':
+        spotifyInfo();
+        break;
+    case 'movie-this':
+        movieInfo();
+        break;
+    default:
+        console.log("DOES NOT COMPUTE, TRY AGAIN");
+}
