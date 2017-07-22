@@ -194,7 +194,8 @@ var justDoIt = function() {
     fs.readFile('random.txt', 'utf8', function(error, data) {
         if (error) {
             console.log("Error! Can't DO IT: " + error)
-        } 
+        }
+        // split the data in text since it runs the 'command' and writes the 'selection' 
         var rndmData = data.split(',');
         command = rndmData[0];
         selection = rndmData[1];
