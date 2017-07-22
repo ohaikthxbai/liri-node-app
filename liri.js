@@ -69,6 +69,7 @@ var twitterInfo = function() {
 var spotifyInfo = function() {
     var sClient = new spotify(keys.spotifyKeys);
     // check if the input isn't empty and if it's a string
+    // mmmm these statements are a bit repetitive...
     if(!selection === undefined || typeof selection === 'string') {
         // call spotify search method with user's input (selection)
         sClient.search({
@@ -83,11 +84,12 @@ var spotifyInfo = function() {
             }
         });
     }
-    // check if the user's input is less than 4 characters, or no input
+    // if the input is empty, default search is this
     else {
+        selection = "The Sign Ace of Base";
         sClient.search({
             type: 'track',
-            query: "The Sign Ace of Base"
+            query: selection
         }, function(error, data) {
             if (error) {
                 console.log("Spotify error. FIX IT:" + error);
